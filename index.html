@@ -1,4 +1,3 @@
-<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
 <title>Morspark Cleaning Services</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700;12..96,800&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
@@ -163,6 +162,7 @@ section{padding-block:68px}
 .plan .price small{font:500 .9rem var(--font-body);color:var(--muted)}
 .plan ul{margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:7px;color:var(--muted);font-size:.95rem}
 .plan li::before{content:"✓ ";color:var(--brand);font-weight:700}
+.btn[hidden]{display:none}
 .plan-note{border-left:4px solid var(--spark);padding:2px 0 2px 12px;font-size:.88rem;color:var(--fg)}
 .note{margin-top:16px;font-size:.85rem;color:var(--muted)}
 
@@ -257,6 +257,7 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
       <label class="opt inspect" for="f-media"><input type="checkbox" id="f-media"><span>I have photos or videos of the space<small>They help us quote faster. After WhatsApp opens, tap the + or paperclip in the chat to attach them.</small></span></label>
       <label class="opt inspect" for="f-inspect"><input type="checkbox" id="f-inspect"><span>I want an on-site inspection<small>₦3,000 commitment fee. Deducted from your total if you book us. Non-refundable if you decide not to go ahead.</small></span></label>
       <a class="btn btn-brand" id="waBtn" href="https://wa.me/2349039712387" target="_blank" rel="noopener">Send request on WhatsApp</a>
+      <a class="btn btn-spark" id="payBtn" href="https://paystack.shop/pay/943tv9ui03" target="_blank" rel="noopener" hidden>Pay ₦3,000 inspection fee</a>
       <div id="result" role="status" aria-live="polite"></div>
     </form>
   </div>
@@ -321,6 +322,7 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
     </div>
     <p class="note">Recurring clients get a lower rate than one-off visits.</p>
     <p class="plan-note" style="margin-top:18px;max-width:70ch"><strong>On-site inspection:</strong> ₦3,000 commitment fee. It is deducted from your total if you book us, and non-refundable if you decide not to go ahead after the visit. Estimates from your details and photos stay free.</p>
+    <p style="margin-top:14px"><a class="btn btn-spark" href="https://paystack.shop/pay/943tv9ui03" target="_blank" rel="noopener">Pay ₦3,000 inspection fee</a></p>
   </div>
 </section>
 
@@ -345,7 +347,7 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
     <details><summary>My toilets and drainage often smell bad. How do you deal with it?</summary><p>We start with a drainage flushing chemical that clears years of dirt build-up from your drainage. We have products for this, and we also give you techniques to keep the fresh smell lasting.</p></details>
     <details><summary>Do you offer fumigation?</summary><p>Yes, strictly on request, and you can book it on its own. It is safe. You will need to leave the house for about 3 to 5 hours, and we provide bags to keep your essentials and food safe during the fumigation. The price is quoted on request, depending on what we are tackling.</p></details>
     <details><summary>What if something is missed?</summary><p>Tell us within 24 hours and we'll send the team back to fix it at no charge.</p></details>
-    <details><summary>Do you charge for an inspection?</summary><p>Estimates from your details and photos are free. If you want us to inspect on site, there is a ₦3,000 commitment fee. It is deducted from your total if you book us, and non-refundable if you decide not to go ahead after the visit.</p></details>
+    <details><summary>Do you charge for an inspection?</summary><p>Estimates from your details and photos are free. If you want us to inspect on site, there is a ₦3,000 commitment fee. It is deducted from your total if you book us, and non-refundable if you decide not to go ahead after the visit. <a href="https://paystack.shop/pay/943tv9ui03" target="_blank" rel="noopener">Pay the inspection fee here</a>.</p></details>
     <details><summary>Can I change or cancel a visit?</summary><p>Yes. Give us notice before your visit and we'll reschedule or pause your plan.</p></details>
   </div>
 </section>
@@ -393,6 +395,7 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
         (add a comma after the previous line), then change the text and name.
         There is no limit; 6 to 8 of your best works well. Add stars:5 (1 to 5) to show stars. */
   var GBP='https://maps.app.goo.gl/T8zRXvUTTKvZvXw8A';
+  var SHEET_URL='https://script.google.com/macros/s/AKfycbxA7h8pVz_nQ7iQhnDWS4OG363oGjlsUHa4bG8PbVk9RihabeqQQMX4PFpJJC3jSDf3fw/exec';
   var REVIEWS=[
     {t:'A very good deep cleaning job was done at our house with transparency. There was no disappointment as regards to the appointment day as well. Thumbs up',n:'Trybe Music'}
   ];
@@ -520,13 +523,41 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
     if(chk('f-media'))lines.push('I have photos/videos of the space and will send them in this chat next.');
     return 'https://wa.me/'+WA+'?text='+encodeURIComponent(lines.join('\n'));
   }
-  function sync(){wa.href=build()}
+  var RID=Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  function logSheet(status){
+    if(!SHEET_URL)return;
+    try{
+      fetch(SHEET_URL,{method:'POST',mode:'no-cors',keepalive:true,headers:{'Content-Type':'text/plain;charset=utf-8'},
+        body:JSON.stringify({id:RID,name:val('f-name'),phone:val('f-phone'),service:sel.value,
+          size:document.getElementById('f-size').value,freq:document.getElementById('f-freq').value,
+          area:val('f-area'),inspect:chk('f-inspect')?'Yes':'No',photos:chk('f-media')?'Yes':'No',status:status})});
+    }catch(err){}
+  }
+  var pay=document.getElementById('payBtn'),paid=false,WA_LABEL=wa.textContent;
+  function sync(){
+    wa.href=build();
+    var ins=chk('f-inspect');
+    if(!ins)paid=false;
+    pay.hidden=!(ins&&!paid);
+    wa.hidden=(ins&&!paid);
+    wa.textContent=paid?'Step 2: Send details on WhatsApp':WA_LABEL;
+  }
+  pay.addEventListener('click',function(e){
+    if(!val('f-name')||!val('f-phone')){
+      e.preventDefault();out.className='on';
+      out.textContent='Please add your name and phone number first, then tap pay.';return;
+    }
+    logSheet('Inspection: pay link opened');
+    paid=true;sync();out.className='on';
+    out.textContent='Payment page opened in a new tab. After you pay, come back here and tap "Step 2: Send details on WhatsApp" so we can confirm your visit.';
+  });
   f.addEventListener('input',sync);f.addEventListener('change',sync);sync();
   wa.addEventListener('click',function(e){
     if(!val('f-name')||!val('f-phone')){
       e.preventDefault();out.className='on';
       out.textContent='Please add your name and phone number first, then tap the WhatsApp button.';return;
     }
+    logSheet(chk('f-inspect')?'Inspection: pay link opened, WhatsApp sent':'Requested on WhatsApp');
     sync();out.className='on';
     var m='WhatsApp is opening with your request filled in.';
     m+=chk('f-media')?' Press send, then tap the + or paperclip in the chat to attach your photos or videos.':' Press send to finish.';
@@ -539,5 +570,3 @@ footer ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;
   });
 })();
 </script>
-
-</body></html>
